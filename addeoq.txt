@@ -1,0 +1,88 @@
+<?php 
+session_start();
+include_once('_header.php'); 
+?>
+<div class="content-wrapper">
+  <section class="content">
+    <div class="row">
+      <div class="col-lg-12" style="padding-left: 150px; padding-right: 150px;">
+        <div class="panel panel-primary">
+          <div class="panel-heading"> Tambah Barang Keluar</div>
+          <div class="panel-body">
+            <div class="pull-right">
+              <a href="eoq.php" class="btn btn-warning btn-sm"><i class="fa fa-chevron-left"></i> Kembali </a>    
+            </div>
+            <form action="../_proses/proses_barangklr.php" method="post" style="margin-top: 20px; margin-bottom: 20px;">
+              <?php 
+              if (isset($_GET['pesan'])) {
+                if ($_GET['pesan']){?>
+                  <br>
+                  <div class="alert alert-danger alert-dismissable" role="alert">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <span class="fa fa-exclamation-sign" aria-hiden="true"></span>
+                    <strong>Upss!</strong> stok barang yang tersedia tidak mencukupi!
+                  </div>
+
+                  <?php
+                }
+              }
+              ?>
+
+              <div class="form-groupm">
+                <label for="konv_tahun">Nama Barang</label>
+                <select name="konv_tahun" id="konv_tahun" class="form-control" onchange='changeValue(this.value)' required>
+                  <option value="">-pilih-</option>
+                  <?php   
+                  $query = mysqli_query($koneksi, "SELECT * FROM master_eoq order by tahun esc");  
+                  $result = mysqli_query($koneksi, "SELECT * FROM master_eoq");  
+                  
+                  $a          = "var b_pemesanan = new Array();\n;";  
+                  $b          = "var b_penyimpanan = new Array();\n;";
+
+                  while ($row = mysqli_fetch_array($result)) {  
+                    echo '<option name="tahun" value="'.$row['tahun'] . '">' . $row['tahun'] . '</option>';   
+                    $a .= "b_pemesanan['" . $row['tahun'] . "'] = {b_pemesanan:'" . addslashes($row['b_pemesanan'])."'};\n";  
+                    $b .= "b_penyimpanan['" . $row['tahun'] . "'] = {b_penyimpanan:'" . addslashes($row['b_penyimpanan'])."'};\n";
+                  }  
+                  ?>
+                </select>
+              </div><br>
+
+              <div class="form-group">
+                <label for="b_pemesanan">Biaya Pemesanan</label>
+                <input type="number" name="b_pemesanan" id="b_pemesanan" class="form-control" readonly>
+              </div>
+              <div class="form-group">
+                <label for="b_penyimpanan">Biaya Penyimpanan</label>
+                <input type="number" name="b_penyimpanan" id="b_penyimpanan" class="form-control" readonly>
+              </div>
+              
+              <script type="text/javascript">   
+                <?php
+                echo $a;   
+                echo $b; 
+                ?>  
+                function changeValue(id){  
+                  
+                  document.getElementById('b_pemesanan').value = b_pemesanan[id].b_pemesanan;  
+                  document.getElementById('b_penyimpanan').value = b_penyimpanan[id].b_penyimpanan;
+                };  
+              </script>
+              <div class="form-group">
+                <label for="gggggggg">gggggggg</label>
+                <input type="number" name="gggggggg" id="gggggggg" class="form-control" required="">
+              </div>
+
+
+              <div class="form-group pull-right">
+                <button type="reset" class="btn btn-danger">Reset</button>
+                <input type="submit" name="tambah" value="Simpan" class="btn btn-success">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div><!-- /.row -->
+  </section>
+</div>
+<?php include_once('_footer.php'); ?>

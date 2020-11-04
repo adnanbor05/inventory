@@ -1,0 +1,58 @@
+
+jl. Kedawung, Nologaten, Caturtunggal, Depok, Sleman, Yogyakarta
+
+------------------------------------------------- [ VALIDASI ] ------------------------------------------------------------
+contoh validasi = pola_email=/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}$/;
+							
+							[ ADMIN ]
++ add user & edit user >>>>>>>>>>>>>>>>>> DONE
++ konfigurasi menggunakan "required"  >>>>>>>>>>>>>>>>>> DONE
+
++ validasi tanggal (contoh)
+	<form name="formTes" action="tesform.html" method="get"  onsubmit="return cekData();">
+		<tr><td>Tgl Lahir:</td><td><input type="text" name="lahir" /> <b>Valid date format:</b> dd/mm/yyyy</td>
+	</form>
+	<script type="text/javascript">
+	function checkdate()
+	{    var validformat=/^\d{2}\/\d{2}\/\d{4}$/ //Basic check for format validity
+	var returnval=false
+	if (!validformat.test(formTes.lahir.value))
+	alert("Invalid Date Format. Please correct and submit again.")
+	else
+	{     //Detailed check for valid date ranges
+	var dayfield=formTes.lahir.value.split("/")[0]
+	var monthfield=formTes.lahir.value.split("/")[1]
+	var yearfield=formTes.lahir.value.split("/")[2]
+	var dayobj = new Date(yearfield, monthfield-1, dayfield)
+	if ((dayobj.getMonth()+1!=monthfield)||(dayobj.getDate()!=dayfield)||(dayobj.getFullYear()!=yearfield))
+	alert("Invalid Day, Month, or Year range detected. Please correct and submit again.")
+	else
+	returnval=true
+	}
+	if (returnval==false) formTes.lahir.select()
+	return returnval
+	}
+	</script>
++ 
+
+======= JOIN 3 TABEL
+contoh 1
+"SELECT * FROM tb_barangmsk JOIN tb_supplier ON tb_barangmsk.kode_supp = tb_supplier.kode_supp JOIN tb_barang ON tb_barang.kode_barang = tb_barangmsk.kode_barang ORDER BY id_barangmsk DESC LIMIT $posisi, $batas";
+contoh 2
+SELECT nama_barang, stok_barang, nama_supp, tanggal_msk 
+FROM brg_masuk 
+INNER JOIN supplier ON brg_masuk.kode_supp = supplier.kode_supp 
+INNER JOIN barang ON brg_masuk.kode_barang = barang.kode_barang 
+WHERE (tanggal_msk BETWEEN '2020-01-01' AND '2020-02-30')
+
+==========join 4 tabel============
+SELECT id_brgmsk, barang.kode_barang, barang.nama_barang, nama_jenis, supplier.nama_supp
+FROM `brg_masuk`
+JOIN barang on brg_masuk.kode_barang=barang.kode_barang
+JOIN tb_jenis ON barang.kode_jenis=tb_jenis.kode_jenis
+JOIN supplier ON brg_masuk.kode_supp=supplier.kode_supp
+WHERE jumlah_brg > '45'
+=====================
+SELECT barang.kode_barang, barang.nama_barang, nama_jenis FROM `konfigurasi_eoq`
+JOIN barang ON konfigurasi_eoq.kode_barang=barang.kode_barang
+JOIN tb_jenis ON barang.kode_jenis=tb_jenis.kode_jenis

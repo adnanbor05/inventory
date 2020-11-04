@@ -1,0 +1,30 @@
+<!-- PROSE EOQ -->
+<?php 
+require_once'../_config/koneksi.php'; 
+
+if (isset($_POST['tambah'])){
+	$kd_eoq = trim(mysqli_real_escape_string($koneksi, $_POST['kd_eoq']));
+	$nama_barang = trim(mysqli_real_escape_string($koneksi, $_POST['nama_barang']));
+	$jenis_barang = trim(mysqli_real_escape_string($koneksi, $_POST['jenis_barang']));
+	$periode = trim(mysqli_real_escape_string($koneksi, $_POST['periode']));
+	
+	$demand = trim(mysqli_real_escape_string($koneksi, $_POST['demand']));
+
+	$b_pemesanan = trim(mysqli_real_escape_string($koneksi, $_POST['b_pemesanan']));
+	$b_penyimpanan = trim(mysqli_real_escape_string($koneksi, $_POST['b_penyimpanan']));
+	$tot_pemakaian = trim(mysqli_real_escape_string($koneksi, $_POST['tot_pemakaian']));
+	$leadtime = trim(mysqli_real_escape_string($koneksi, $_POST['leadtime']));
+
+	$jumlah=2*$_POST['demand']*$_POST['b_penyimpanan']/$_POST['b_pemesanan'];
+	$eoq= sqrt($jumlah);
+
+	$rop=$_POST['tot_pemakaian']*$_POST['leadtime'];
+
+	$sql_cek_kodeeoq = mysqli_query($koneksi, "SELECT * FROM eoq_rop WHERE kode_eoq = '$kd_eoq'")  or die (mysqli_error($koneksi));
+	if (mysqli_num_rows($sql_cek_kodeeoq) > 0) {
+		echo "<script>window.location='../admin/addeoq.php?pesan=gagal'</script>";
+	} else {
+		mysqli_query($koneksi, "INSERT INTO eoq_rop (kode_eoq, nama_barang, jenis_barang, periode, demand, b_pemesanan, b_penyimpanan, total_pemakaian, leadtime,eoq,rop) VALUES ('$kd_eoq', '$nama_barang', '$jenis_barang', '$periode','$demand','$b_pemesanan','$b_penyimpanan','$tot_pemakaian','$leadtime','$eoq','$rop')") or die (mysqli_error($koneksi));
+		echo "<script>window.location='../admin/eoq.php'</script>";
+	}
+}
